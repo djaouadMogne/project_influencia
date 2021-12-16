@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
+ * @ApiResource()
  */
 class Article
 {
@@ -35,16 +36,8 @@ class Article
     /**
      * @ORM\Column(type="date")
      */
-    private  $date;
 
-    /**
-     * @ORM\Column(type="date")
-     */
-    private  $datePublish;
-
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=0, nullable=true)
-     */
+  
     private DecimalType $price;
 
     /**
@@ -97,29 +90,6 @@ class Article
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getDatePublish(): ?\DateTimeInterface
-    {
-        return $this->datePublish;
-    }
-
-    public function setDatePublish(\DateTimeInterface $datePublish): self
-    {
-        $this->datePublish = $datePublish;
-
-        return $this;
-    }
 
     public function getPrice(): ?DecimalType
     {
