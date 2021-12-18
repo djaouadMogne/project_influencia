@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\ArticleUpdateAt;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
  * @ApiResource(
@@ -72,7 +74,7 @@ class Article
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"article_details_read"})
      */
-    private User $author;
+    private UserInterface $author;
 
     public function __construct()
     {
@@ -131,12 +133,12 @@ class Article
         return $this;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): User
     {
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    public function setAuthor(User $author): self
     {
         $this->author = $author;
 
