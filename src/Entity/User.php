@@ -9,18 +9,46 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Api\FilterInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @ApiResource()
+ * @ApiResource(
+ *      collectionOperations={
+ *           "get"={
+ *                "normalization_context"={"groups"={"user_read"}}
+ *           },
+ *           "post"    
+ *      },
+ *      itemOperations={
+ *         "get"={
+ *               "normalization_context"={"groups"={"user_details_read"}}
+ *          },
+ *          "put",
+ *          "patch",
+ *          "delete"    
+ *  }
+ * )
+ *  @ApiFilter(SearchFilter::class,properties={"email":"partial"})
+ * @ApiFilter(DateFilter::class,properties={"createdAt"})
+ * @ApiFilter(BooleanFilter::class,properties={"status"})
+ *  @ApiFilter(ExistsFilter::class,properties={"UpdateAt"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    use RessourceId;
+    use ResourceId;
     use Timestapable;
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user_read","user_details_read","article_details_read"})
      */
     private string $email;
 
@@ -37,13 +65,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Article::class, mappedBy="author", orphanRemoval=true)
+     * @Groups({"user_details_read"})
      */
     private Collection $articles;
 
     /**
      * @ORM\Column(type="string", length=24)
+     * @Groups({"user_details_read"})
      */
-    private $theusername;
+    private string $theusername;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $status;
 
  
 
@@ -53,6 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->articles = new ArrayCollection();
         $this->createdAt= new DateTimeImmutable();
+        $this->status=true;
     }
 
 
@@ -162,11 +198,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeArticle(Article $article): self
     {
-        if ($this->articles->removeElement($article)) {
+        if ($this->articles->contains($article)) {
             // set the owning side to null (unless already changed)
-            if ($article->getAuthor() === $this) {
-                $article->setAuthor(null);
-            }
+        
+                $this->articles->removeElement($article);
+            
         }
 
         return $this;
@@ -180,6 +216,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTheusername(string $theusername): self
     {
         $this->theusername = $theusername;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

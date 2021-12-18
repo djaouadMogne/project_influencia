@@ -38,7 +38,11 @@ class AppFixtures extends Fixture
             $article->setContent($fake->text(maxNbChars:350));
             $article->setName($fake->text(maxNbChars:30));
             
-
+            if($u % 3===0)
+            {
+                $user->setStatus(false);
+                     
+            }
             
             $manager->persist($article);
         }

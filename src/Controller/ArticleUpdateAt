@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Entity\Article;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+Class ArticleUpdateAt
+{
+    public function __invoke(Article $data):Article
+    {
+        dd($data);
+        return $data;
+    }
+
+}
+
