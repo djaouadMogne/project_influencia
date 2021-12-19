@@ -28,7 +28,7 @@ security:
 
         users:
             pattern:   ^/api/users
-            methods:[PUT,PATCH,DELETE]
+            methods: [PUT,PATCH,DELETE]
             stateless: true
             guard:
                 authenticators:
@@ -36,7 +36,7 @@ security:
 
         articles:
             pattern:   ^/api/articles
-            methods:[POST,PUT,PATCH,DELETE]
+            methods: [POST,PUT,PATCH,DELETE]
             stateless: true
             guard:
                 authenticators:
@@ -57,6 +57,6 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/users, roles: IS_AUTHENTICATED_FULLY,methods: {PUT,PATCH,DELETE} }
-        - { path: ^/articles, roles: IS_AUTHENTICATED_FULLY,methods: {POST,PUT,PATCH,DELETE} }
+        - { path: ^/users, roles: IS_AUTHENTICATED_FULLY, methods: [PUT,PATCH,DELETE] }
+        - { path: ^/articles, roles: IS_AUTHENTICATED_FULLY, methods: [POST,PUT,PATCH,DELETE] }
  

@@ -74,7 +74,7 @@ class Article
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"article_details_read"})
      */
-    private UserInterface $author;
+    private User $author;
 
     public function __construct()
     {

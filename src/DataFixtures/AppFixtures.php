@@ -11,7 +11,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-   
+   const DEFAULT_USER=['email'=>'djaouad@djaouad.open','password'=>'password'];
     private UserPasswordHasherInterface $encoder;
     public function __construct(UserPasswordHasherInterface $encoder)
     {
@@ -23,6 +23,13 @@ class AppFixtures extends Fixture
         
 
         $fake= Factory::create();
+
+        $defaultUser=new User();
+        $passHash=$this->encoder->hashPassword($defaultUser ,self::DEFAULT_USER['password']);
+        $defaultUser->setEmail (self::DEFAULT_USER['email']);
+        $defaultUser ->setPassword($passHash);
+        $defaultUser->setTheusername($fake->name);
+
         for($u = 0;$u<10;$u++)
         {
             $user=new User();

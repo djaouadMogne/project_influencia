@@ -17,7 +17,10 @@ Class ArticlTest extends AbstractEndPoint
     {
         $response=$this->GetResponseFromRequest(
             Request::METHOD_GET,
-            '/api/articles'
+            '/api/articles',
+            '',
+            [],
+            false
         );
 
         $responseContent=$response->getContent();
